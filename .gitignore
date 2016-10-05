@@ -1,4 +1,17 @@
-# elm-package generated files
-elm-stuff/
-# elm-repl generated files
-repl-temp-*
+/elm-stuff
+/target
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+.hgignore
+.hg/
+/figwheel_server.log
+/CHANGELOG.md
+.idea/
+.node_modules/
+node_modules/
