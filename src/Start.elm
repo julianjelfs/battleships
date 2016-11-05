@@ -15,7 +15,7 @@ view model =
         , div
             []
             [ button
-                [ onClick (NavigateTo "game")
+                [ onClick (NavigateTo "setup")
                 , class "one-player" ]
                 [ text "One Player" ]
             , button

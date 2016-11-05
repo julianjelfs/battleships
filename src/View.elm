@@ -7,6 +7,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.App exposing (map)
 import Start
+import SetUp
 
 view : Model -> Html Msg
 view model =
@@ -39,6 +40,9 @@ pageView model =
     case model.route of
         StartRoute ->
             Start.view model
+
+        SetUp ->
+            SetUp.view model
 
         ShareRoute ->
             div [] [ h2 [ class "title" ] [ text "Share" ] ]

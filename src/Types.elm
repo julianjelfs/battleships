@@ -16,6 +16,7 @@ hopConfig =
 type Route
     = StartRoute
     | ShareRoute
+    | SetUp
     | GameRoute
     | NotFoundRoute
 
