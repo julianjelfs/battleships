@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.container > div {
+    flex:1;
+}
+
+.choose {
+
+}
+
+input {
+    padding:10px;
+}
+
+button {
+    padding:3px;
+    background-color: #ccc;
+    border: 1px solid #aaa;
+}
+
+button.del-btn, button.add-btn {
+    min-width: 30px;
+}
+
+.back-btn {
+    text-align: center;
+}
+
+.add-btn, .back-btn button {
+    height:38px;
+    width: 60px;
+    margin-left:8px;
+}
+
+.current-score {
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+}
+
+.score-btns {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.score-btns button {
+    width:80px;
+    height:80px;
+    margin:8px 0 8px 0;
+    font-size: 1.3em;
+    border:none;
+    flex:1;
+}
+
+.child.good {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+.child.bad {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+.score-btns.good button {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+.score-btns.bad button {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+.child {
+    display:flex;
+    padding:20px;
+    background:#eee;
+    margin: 5px 0 5px 0;
+}
+
+.selected-child > div {
+    flex:1;
+    flex-basis: 20%;
+}
+
+.child>span {
+    flex: 1;
+}
+
+.add-child {
+    margin-top: 20px;
+    padding:20px;
+}
+
+.add-child>div {
+    display:flex;
+}
+
+.add-child input {
+    flex-grow: 1;
+}
