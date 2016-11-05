@@ -1,6 +1,7 @@
 console.log('[STARTING SERVER]')
 import express from 'express'
 import webpack from 'webpack'
+import history from 'connect-history-api-fallback'
 import webpackMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import config from '../webpack.config.js'
@@ -24,6 +25,7 @@ if (isDeveloping) {
         }
     })
 
+    app.use(history())
     app.use(middleware)
     app.use(webpackHotMiddleware(compiler))
 }
