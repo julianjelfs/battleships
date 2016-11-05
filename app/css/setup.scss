@@ -1,0 +1,26 @@
+@import 'variables';
+
+.setup {
+  > div {
+    float:left;
+    border:1px solid $border;
+    min-height:600px;
+  }
+
+  .battlefield {
+    width:70%;
+
+    table {
+      width:100%;
+      td {
+        border:1px solid #ccc;
+        width:(100% / 11);
+        height:60px;
+      }
+    }
+  }
+
+  .choose-ships {
+    width:30%;
+  }
+}

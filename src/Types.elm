@@ -2,6 +2,10 @@ module Types exposing(..)
 
 import Hop.Types exposing (Address, Config, Query)
 
+type GameMode =
+    Alternate
+    | SwitchOnMiss
+
 type Msg =
     NavigateTo String
     | SetQuery Query
@@ -23,8 +27,9 @@ type Route
 type alias Model =
     { address: Address
     , route: Route
+    , mode : GameMode
     }
 
 initialModel : Address -> Route -> Model
 initialModel address route =
-    Model address route
+    Model address route Alternate

@@ -1,3 +1,6 @@
+@import 'variables.scss';
+@import 'setup.scss';
+
 body {
   margin: 0;
   padding: 20px;
@@ -7,6 +10,7 @@ body {
 html {
   box-sizing: border-box;
 }
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
@@ -29,11 +33,12 @@ html {
   }
 
   .one-player {
-    background-color:deepskyblue;
+    background-color: $primary;
   }
 
   .two-player {
-    background-color:lightgreen;
+    background-color: $secondary;
   }
+
 }
 
