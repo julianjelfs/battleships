@@ -1,17 +1,39 @@
 body {
-  color: #fff;
-  font-family:Monospace;
-  font-size:13px;
-  text-align:center;
-  font-weight: bold;
-
-  background-color: #000;
-  margin: 0px;
-  overflow: hidden;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial;
 }
 
-* {
+html {
   box-sizing: border-box;
 }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
+.stage {
+  padding:40px;
+  text-align:center;
+
+  h1 {
+    font-size:4em;
+  }
+
+  button {
+    padding:40px;
+    margin:10px;
+    min-width:200px;
+    font-size: 1.5em;
+    border:none;
+    cursor:pointer;
+  }
+
+  .one-player {
+    background-color:deepskyblue;
+  }
+
+  .two-player {
+    background-color:lightgreen;
+  }
+}
 
