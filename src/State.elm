@@ -16,8 +16,13 @@ update msg model =
             let
                 (m, c) =
                     navigateTo model path
+
+                cmds =
+                    case path of
+                        "setup" -> Cmd.batch [c, getRandomShips]
+                        _ -> c
             in
-                (m, Cmd.batch [c, getRandomShips])
+                (m, cmds)
 
         SetQuery query ->
             setQuery model query
