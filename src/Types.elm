@@ -1,6 +1,7 @@
 module Types exposing(..)
 
 import Hop.Types exposing (Address, Config, Query)
+import Set exposing (Set)
 
 type alias Coord =
     { x: Int
@@ -8,8 +9,9 @@ type alias Coord =
     , hit: Bool
     }
 
+
 type alias Ship =
-    { positions: List Coord
+    { positions: Set Coord
     }
 
 type alias Ships = List Ship
