@@ -10,8 +10,21 @@ import Types exposing (..)
 headerCol c =
     th [] [text c]
 
-gridCol n =
-    td [] []
+cellCoveredByShip coord ships =
+    ships
+        |> List.foldl
+            (\s  covered ->
+                covered || List.member coord s.positions) False
+
+
+gridCol ships y x =
+    let
+        cls =
+            case cellCoveredByShip (x, y, False) ships of
+                True -> "covered"
+                False -> ""
+    in
+        td [ class cls ] []
 
 headerRow =
     let
@@ -21,18 +34,18 @@ headerRow =
             []
             (th [][] :: (List.map headerCol range))
 
-gridRow n =
+gridRow ships y =
     tr
         []
-        (td [] [text (toString n)] :: List.map gridCol [1..10])
+        (td [] [text (toString y)] :: List.map (gridCol ships y) [1..10])
 
-grid : Html Msg
-grid =
+grid : Ships -> Html Msg
+grid ships =
     table
         []
         [ tbody
             []
-            (headerRow :: (List.map gridRow [1..10]))
+            (headerRow :: (List.map (gridRow ships) [1..10]))
         ]
 
 view: Model -> Html Msg
@@ -45,7 +58,7 @@ view model =
             [ class "setup" ]
             [ div
                 [ class "battlefield" ]
-                [ grid ]
+                [ grid model.myShips ]
             , div
                 [ class "choose-ships" ]
                 []

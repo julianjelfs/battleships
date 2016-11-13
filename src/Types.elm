@@ -4,14 +4,11 @@ import Hop.Types exposing (Address, Config, Query)
 import Set exposing (Set)
 
 type alias Coord =
-    { x: Int
-    , y: Int
-    , hit: Bool
-    }
+    (Int, Int, Bool)
 
 
 type alias Ship =
-    { positions: Set Coord
+    { positions: List Coord
     }
 
 type alias Ships = List Ship

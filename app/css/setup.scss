@@ -16,6 +16,10 @@
         border:1px solid #ccc;
         width:(100% / 11);
         height:50px;
+
+        &.covered {
+          background-color: $primary;
+        }
       }
     }
   }

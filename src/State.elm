@@ -2,7 +2,7 @@ module State exposing(..)
 
 import Array exposing (Array)
 import Hop
-import Random exposing (Seed)
+import Random exposing (Generator, Seed)
 import Types exposing (..)
 import Debug exposing (log)
 import Navigation
@@ -32,18 +32,10 @@ update msg model =
             setQuery model query
 
         PositionShips ships ->
-            ({model | myShips = ships}, Cmd.none)
+            ({model | myShips = ships |> (log "ship: ") }, Cmd.none)
 
         None () ->
             (model, Cmd.none)
-
-type ShipType =
-    None
-    | Carrier
-    | Battleship
-    | Cruiser
-    | Submarine
-    | Destroyer
 
 carrier = 5
 battleship = 4
@@ -51,38 +43,55 @@ cruiser = 3
 submarine = 3
 destroyer = 2
 
-allShips = [Carrier, Battleship, Cruiser, Submarine, Destroyer]
+allShips = [carrier, battleship, cruiser, submarine, destroyer]
 
-getAShip: Array ShipType -> Seed -> (ShipType, Seed, Array ShipType)
-getAShip ships seed =
-    let
-        ((ms, rs), s1) = Random.step (RA.choose ships) seed
-    in
-        ( Maybe.withDefault None ms
-        , s1
-        , rs )
+type Direction =
+    Horizontal
+    | Vertical
 
---this will generate a random arrangement of ships
---which we will have the chance to move around
---we need one of each type of ship and they need to be positioned so that
---they do not overlap
---orientation needs to be random too
-randomShips : Array ShipType -> Random.Seed -> Ships
-randomShips ships seed =
-    let
-        (shipType, s1, ships) = getAShip ships seed
-    in
-    --remove a ship from the set of remaining ships to place
-    --generate a random position and orientation
-    --test whether it overlaps with any we have already positioned
-    --recurse
-    []
+direction: Generator Direction
+direction =
+    Random.bool
+        |> Random.map
+            (\b -> if b then Horizontal else Vertical)
+
+point: Generator (Int, Int)
+point =
+    Random.pair
+        (Random.int 0 10)
+        (Random.int 0 10)
+
+shipGenerator: Int -> Generator Ship
+shipGenerator length =
+    Random.map2
+        (\d (x,y) ->
+            [0..length-1]
+                |> List.map
+                    (\n ->
+                        case d of
+                            Horizontal -> (x, (y+n), False)
+                            Vertical -> ((x+n), y, False))
+                |> Ship )
+        direction point
+
+randomShips : Random.Seed -> Ships
+randomShips seed =
+    allShips
+        |> List.foldl
+            (\s (ships, sd) ->
+                let
+                    (ship, nextSeed) =
+                        Random.step (shipGenerator s) sd
+                in
+                    (ship :: ships, nextSeed))
+                ([], seed)
+        |> fst
 
 getRandomShips =
     Time.now `Task.andThen`
         (\t ->
             round t
                 |> Random.initialSeed
-                |> (randomShips allShips)
+                |> randomShips
                 |> Task.succeed )
                 |> Task.perform None PositionShips
