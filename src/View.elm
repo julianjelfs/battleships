@@ -1,13 +1,15 @@
-module View exposing(..)
+module View exposing (..)
 
 import Dict
 import Html.Events exposing (onClick)
+import Routing exposing (..)
 import Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.App exposing (map)
 import Start
 import SetUp
+
+
 
 view : Model -> Html Msg
 view model =
@@ -15,6 +17,7 @@ view model =
         [ menu model
         , pageView model
         ]
+
 
 menu : Model -> Html Msg
 menu model =
@@ -35,20 +38,21 @@ menu model =
             ]
         ]
 
+
 pageView : Model -> Html Msg
 pageView model =
     case model.route of
-        StartRoute ->
+        Just StartRoute ->
             Start.view model
 
-        SetUp ->
+        Just SetUp ->
             SetUp.view model
 
-        ShareRoute ->
+        Just ShareRoute ->
             div [] [ h2 [ class "title" ] [ text "Share" ] ]
 
-        GameRoute ->
+        Just GameRoute ->
             div [] [ h2 [ class "title" ] [ text "Play Game" ] ]
 
-        NotFoundRoute ->
+        _ ->
             div [] [ h2 [ class "title" ] [ text "Not found" ] ]

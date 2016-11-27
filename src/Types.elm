@@ -1,48 +1,43 @@
-module Types exposing(..)
+module Types exposing (..)
 
-import Hop.Types exposing (Address, Config, Query)
+import Navigation
+import Routing exposing (..)
 import Set exposing (Set)
+import UrlParser as Url
+
 
 type alias Coord =
-    (Int, Int, Bool)
+    ( Int, Int, Bool )
 
 
 type alias Ship =
-    { positions: List Coord
+    { positions : List Coord
     }
 
-type alias Ships = List Ship
 
-type GameMode =
-    Alternate
+type alias Ships =
+    List Ship
+
+
+type GameMode
+    = Alternate
     | SwitchOnMiss
 
-type Msg =
-    NavigateTo String
-    | SetQuery Query
-    | PositionShips Ships
+
+type Msg
+    = PositionShips Ships
+    | UrlChange Navigation.Location
+    | NavigateTo String
     | None ()
 
-hopConfig : Config
-hopConfig =
-    { hash = False
-    , basePath = ""
-    }
-
-type Route
-    = StartRoute
-    | ShareRoute
-    | SetUp
-    | GameRoute
-    | NotFoundRoute
 
 type alias Model =
-    { address: Address
-    , route: Route
+    { route : Maybe Route
     , mode : GameMode
     , myShips : Ships
     }
 
-initialModel : Address -> Route -> Model
-initialModel address route =
-    Model address route Alternate []
+
+initialModel : Navigation.Location -> Model
+initialModel location =
+    Model (Url.parsePath Routing.routes location) Alternate []

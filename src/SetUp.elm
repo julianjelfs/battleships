@@ -7,37 +7,48 @@ import Html.Attributes exposing (..)
 import String exposing (fromChar, toUpper)
 import Types exposing (..)
 
+
 headerCol c =
-    th [] [text c]
+    th [] [ text c ]
+
 
 cellCoveredByShip coord ships =
     ships
         |> List.foldl
-            (\s  covered ->
-                covered || List.member coord s.positions) False
+            (\s covered ->
+                covered || List.member coord s.positions
+            )
+            False
 
 
 gridCol ships y x =
     let
         cls =
-            case cellCoveredByShip (x, y, False) ships of
-                True -> "covered"
-                False -> ""
+            case cellCoveredByShip ( x, y, False ) ships of
+                True ->
+                    "covered"
+
+                False ->
+                    ""
     in
         td [ class cls ] []
 
+
 headerRow =
     let
-        range = [97..106] |> List.map (fromCode >> fromChar >> toUpper)
+        range =
+            List.range 97 106 |> List.map (fromCode >> fromChar >> toUpper)
     in
         tr
             []
-            (th [][] :: (List.map headerCol range))
+            (th [] [] :: (List.map headerCol range))
+
 
 gridRow ships y =
     tr
         []
-        (td [] [text (toString y)] :: List.map (gridCol ships y) [1..10])
+        (td [] [ text (toString y) ] :: List.map (gridCol ships y) (List.range 1 10))
+
 
 grid : Ships -> Html Msg
 grid ships =
@@ -45,10 +56,11 @@ grid ships =
         []
         [ tbody
             []
-            (headerRow :: (List.map (gridRow ships) [1..10]))
+            (headerRow :: (List.map (gridRow ships) (List.range 1 10)))
         ]
 
-view: Model -> Html Msg
+
+view : Model -> Html Msg
 view model =
     div [ class "stage" ]
         [ h1
