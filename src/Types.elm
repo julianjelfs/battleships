@@ -1,7 +1,6 @@
 module Types exposing (..)
 
 import Navigation
-import Routing exposing (..)
 import Set exposing (Set)
 import UrlParser as Url
 
@@ -19,6 +18,10 @@ type alias Ships =
     List Ship
 
 
+type Direction
+    = Horizontal
+    | Vertical
+
 type GameMode
     = Alternate
     | SwitchOnMiss
@@ -30,6 +33,11 @@ type Msg
     | NavigateTo String
     | None ()
 
+type Route
+    = StartRoute
+    | ShareRoute
+    | SetUp
+    | GameRoute
 
 type alias Model =
     { route : Maybe Route
@@ -38,6 +46,6 @@ type alias Model =
     }
 
 
-initialModel : Navigation.Location -> Model
-initialModel location =
-    Model (Url.parsePath Routing.routes location) Alternate []
+initialModel : Model
+initialModel =
+    Model Nothing Alternate []

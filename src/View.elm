@@ -28,9 +28,9 @@ menu model =
                 ]
                 [ text "Home" ]
             , button
-                [ onClick (NavigateTo "share")
+                [ onClick (NavigateTo "setup")
                 ]
-                [ text "Share" ]
+                [ text "Setup" ]
             , button
                 [ onClick (NavigateTo "game")
                 ]
