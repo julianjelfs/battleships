@@ -70,6 +70,34 @@ shipGenerator length =
         direction
         point
 
+inbounds: Coord -> Bool
+inbounds (x, y, _) =
+    x > 0 && x <= 10 && y > 0 && y <= 10
+
+doesntOverlap: List Coord -> Coord -> Bool
+doesntOverlap others coord =
+    List.member coord others |> not
+
+
+validPosition: Ships -> Ship -> Bool
+validPosition ships ship =
+    let
+        allPos = List.concatMap (\s -> s.positions) ships
+    in
+    List.all (\c -> inbounds c && doesntOverlap allPos c) ship.positions
+
+
+getValidShip: Int -> Random.Seed -> Ships -> (Ship, Random.Seed)
+getValidShip s seed ships =
+    let
+        ( ship, nextSeed ) =
+            Random.step (shipGenerator s) seed
+    in
+        if validPosition ships ship then
+            (ship, nextSeed)
+        else
+            getValidShip s nextSeed ships
+
 
 randomShips : Random.Seed -> Ships
 randomShips seed =
@@ -78,7 +106,7 @@ randomShips seed =
             (\s ( ships, sd ) ->
                 let
                     ( ship, nextSeed ) =
-                        Random.step (shipGenerator s) sd
+                        getValidShip s sd ships
                 in
                     ( ship :: ships, nextSeed )
             )

@@ -31,7 +31,7 @@ gridCol ships y x =
                 False ->
                     ""
     in
-        td [ class cls ] []
+        td [ class cls ] [ text ((toString x) ++ "," ++ (toString y))]
 
 
 headerRow =
