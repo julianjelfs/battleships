@@ -5,6 +5,7 @@ import Types exposing (..)
 import Debug exposing (log)
 import Navigation
 import Routing exposing (urlChange)
+import Ships exposing (getRandomShips)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -18,6 +19,6 @@ update msg model =
         PositionShips ships ->
             ( { model | myShips = ships |> (log "ship: ") }, Cmd.none )
 
-        None () ->
-            ( model, Cmd.none )
+        Shuffle ->
+            ( model, getRandomShips )
 

@@ -1,14 +1,30 @@
 @import 'variables';
 
 .setup {
-  > div {
-    float:left;
-    border:1px solid $border;
-    min-height:500px;
+  width:70%;
+
+  .header {
+    h1 {
+      width:80%;
+      float:left;
+    }
+    .shuffle {
+      margin-top:10px;
+      padding:10px;
+      min-width:200px;
+      font-size: 1.5em;
+      border:none;
+      cursor:pointer;
+      float:right;
+      background-color: $secondary;
+    }
   }
 
   .battlefield {
-    width:70%;
+    clear:both;
+    border:1px solid $border;
+    min-height:500px;
+    text-align: center;
 
     table {
       width:100%;
@@ -22,9 +38,5 @@
         }
       }
     }
-  }
-
-  .choose-ships {
-    width:30%;
   }
 }

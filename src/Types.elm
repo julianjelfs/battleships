@@ -1,16 +1,17 @@
 module Types exposing (..)
 
+import Color exposing (Color)
 import Navigation
 import Set exposing (Set)
 import UrlParser as Url
 
 
-type alias Coord =
-    ( Int, Int, Bool )
+type alias ShipCell =
+    ( Int, Int, Bool, Color )
 
 
 type alias Ship =
-    { positions : List Coord
+    { positions : List ShipCell
     }
 
 
@@ -31,7 +32,7 @@ type Msg
     = PositionShips Ships
     | UrlChange Navigation.Location
     | NavigateTo String
-    | None ()
+    | Shuffle
 
 type Route
     = StartRoute

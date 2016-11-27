@@ -1,5 +1,6 @@
 module Ships exposing (getRandomShips)
 
+import Color
 import Time
 import Random
 import Task
@@ -9,23 +10,23 @@ import Tuple
 import Types exposing (..)
 
 carrier =
-    5
+    (5, Color.red)
 
 
 battleship =
-    4
+    (4, Color.purple)
 
 
 cruiser =
-    3
+    (3, Color.yellow)
 
 
 submarine =
-    3
+    (3, Color.green)
 
 
 destroyer =
-    2
+    (2, Color.orange)
 
 
 allShips =
@@ -51,8 +52,8 @@ point =
         (Random.int 0 10)
 
 
-shipGenerator : Int -> Generator Ship
-shipGenerator length =
+shipGenerator : (Int, Color.Color) -> Generator Ship
+shipGenerator (length, color) =
     Random.map2
         (\d ( x, y ) ->
             List.range 0 (length - 1)
@@ -60,23 +61,24 @@ shipGenerator length =
                     (\n ->
                         case d of
                             Horizontal ->
-                                ( x, (y + n), False )
+                                ( x, (y + n), False, color )
 
                             Vertical ->
-                                ( (x + n), y, False )
+                                ( (x + n), y, False, color )
                     )
                 |> Ship
         )
         direction
         point
 
-inbounds: Coord -> Bool
-inbounds (x, y, _) =
+inbounds: ShipCell -> Bool
+inbounds (x, y, _, _) =
     x > 0 && x <= 10 && y > 0 && y <= 10
 
-doesntOverlap: List Coord -> Coord -> Bool
-doesntOverlap others coord =
-    List.member coord others |> not
+--seem to still be getting overlapping ships
+doesntOverlap: List ShipCell -> ShipCell -> Bool
+doesntOverlap others shipCell =
+    List.member shipCell others |> not
 
 
 validPosition: Ships -> Ship -> Bool
@@ -87,7 +89,7 @@ validPosition ships ship =
     List.all (\c -> inbounds c && doesntOverlap allPos c) ship.positions
 
 
-getValidShip: Int -> Random.Seed -> Ships -> (Ship, Random.Seed)
+getValidShip: (Int, Color.Color) -> Random.Seed -> Ships -> (Ship, Random.Seed)
 getValidShip s seed ships =
     let
         ( ship, nextSeed ) =

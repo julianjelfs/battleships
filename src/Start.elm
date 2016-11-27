@@ -8,7 +8,7 @@ import Types exposing (..)
 
 view : Model -> Html Msg
 view model =
-    div [ class "stage" ]
+    div [ class "start" ]
         [ h1
             [ class "title" ]
             [ text "Play Battleships" ]

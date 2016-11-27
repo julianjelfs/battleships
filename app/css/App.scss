@@ -1,5 +1,6 @@
 @import 'variables.scss';
 @import 'setup.scss';
+@import 'start.scss';
 
 body {
   margin: 0;
@@ -15,31 +16,4 @@ html {
   box-sizing: inherit;
 }
 
-.stage {
-  padding:20px;
-  text-align:center;
-
-  h1 {
-    font-size:3em;
-    margin-top:0;
-  }
-
-  button {
-    padding:40px;
-    margin:10px;
-    min-width:200px;
-    font-size: 1.5em;
-    border:none;
-    cursor:pointer;
-  }
-
-  .one-player {
-    background-color: $primary;
-  }
-
-  .two-player {
-    background-color: $secondary;
-  }
-
-}
 
