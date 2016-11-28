@@ -52,8 +52,8 @@ point =
         (Random.int 0 10)
 
 
-shipGenerator : (Int, Color.Color) -> Generator Ship
-shipGenerator (length, color) =
+shipGenerator : Int -> Generator (List ShipCell)
+shipGenerator length =
     Random.map2
         (\d ( x, y ) ->
             List.range 0 (length - 1)
@@ -61,61 +61,60 @@ shipGenerator (length, color) =
                     (\n ->
                         case d of
                             Horizontal ->
-                                ( x, (y + n), False, color )
+                                ( x, (y + n), False)
 
                             Vertical ->
-                                ( (x + n), y, False, color )
+                                ( (x + n), y, False)
                     )
-                |> Ship
         )
         direction
         point
 
 inbounds: ShipCell -> Bool
-inbounds (x, y, _, _) =
+inbounds (x, y, _) =
     x > 0 && x <= 10 && y > 0 && y <= 10
 
 --seem to still be getting overlapping ships
 doesntOverlap: List (Int, Int) -> ShipCell -> Bool
-doesntOverlap others (x, y, _, _) =
+doesntOverlap others (x, y, _) =
     List.member (x, y) others |> not
 
 
-validPosition: Ships -> Ship -> Bool
-validPosition ships ship =
+validPosition: Ships -> List ShipCell -> Bool
+validPosition ships shipCells =
     let
         allPos =
             List.concatMap
-                (\s -> (List.map (\(x, y, _, _) -> (x, y)) s.positions))
+                (\s -> (List.map (\(x, y, _) -> (x, y)) s.positions))
                     ships
     in
         List.all
             (\c -> inbounds c && doesntOverlap allPos c)
-            ship.positions
+            shipCells
 
 
-getValidShip: (Int, Color.Color) -> Random.Seed -> Ships -> (Ship, Random.Seed)
-getValidShip s seed ships =
+getValidShip: Int -> Random.Seed -> Ships -> (List ShipCell, Random.Seed)
+getValidShip n seed ships =
     let
-        ( ship, nextSeed ) =
-            Random.step (shipGenerator s) seed
+        ( shipCells, nextSeed ) =
+            Random.step (shipGenerator n) seed
     in
-        if validPosition ships ship then
-            (ship, nextSeed)
+        if validPosition ships shipCells then
+            (shipCells, nextSeed)
         else
-            getValidShip s nextSeed ships
+            getValidShip n nextSeed ships
 
 
 randomShips : Random.Seed -> Ships
 randomShips seed =
     allShips
         |> List.foldl
-            (\s ( ships, sd ) ->
+            (\(n, c) ( ships, sd ) ->
                 let
-                    ( ship, nextSeed ) =
-                        getValidShip s sd ships
+                    ( positions, nextSeed ) =
+                        getValidShip n sd ships
                 in
-                    ( ship :: ships, nextSeed )
+                    ( Ship positions c  :: ships, nextSeed )
             )
             ( [], seed )
         |> Tuple.first
