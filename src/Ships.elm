@@ -76,17 +76,22 @@ inbounds (x, y, _, _) =
     x > 0 && x <= 10 && y > 0 && y <= 10
 
 --seem to still be getting overlapping ships
-doesntOverlap: List ShipCell -> ShipCell -> Bool
-doesntOverlap others shipCell =
-    List.member shipCell others |> not
+doesntOverlap: List (Int, Int) -> ShipCell -> Bool
+doesntOverlap others (x, y, _, _) =
+    List.member (x, y) others |> not
 
 
 validPosition: Ships -> Ship -> Bool
 validPosition ships ship =
     let
-        allPos = List.concatMap (\s -> s.positions) ships
+        allPos =
+            List.concatMap
+                (\s -> (List.map (\(x, y, _, _) -> (x, y)) s.positions))
+                    ships
     in
-    List.all (\c -> inbounds c && doesntOverlap allPos c) ship.positions
+        List.all
+            (\c -> inbounds c && doesntOverlap allPos c)
+            ship.positions
 
 
 getValidShip: (Int, Color.Color) -> Random.Seed -> Ships -> (Ship, Random.Seed)

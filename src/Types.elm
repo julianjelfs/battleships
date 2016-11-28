@@ -9,6 +9,8 @@ import UrlParser as Url
 type alias ShipCell =
     ( Int, Int, Bool, Color )
 
+--much better structure for ships would be Dict (Int, Int) (Bool, Color)
+--refactor next time
 
 type alias Ship =
     { positions : List ShipCell
