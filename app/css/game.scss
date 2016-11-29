@@ -9,5 +9,12 @@
       width: 50%;
       float: left;
     }
+    .turn {
+      @include big-button();
+    }
+
+    .turn {
+      background-color: $primary;
+    }
   }
 }

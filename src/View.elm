@@ -15,28 +15,7 @@ import SetUp
 view : Model -> Html Msg
 view model =
     div []
-        [ menu model
-        , pageView model
-        ]
-
-
-menu : Model -> Html Msg
-menu model =
-    div []
-        [ div [ class "menu" ]
-            [ button
-                [ onClick (NavigateTo "home")
-                ]
-                [ text "Home" ]
-            , button
-                [ onClick (NavigateTo "setup")
-                ]
-                [ text "Setup" ]
-            , button
-                [ onClick (NavigateTo "game")
-                ]
-                [ text "Game" ]
-            ]
+        [ pageView model
         ]
 
 

@@ -24,18 +24,9 @@ view model =
                 , span
                     []
                     [ button
-                        [ class "play"
-                        , onClick (NavigateTo "game")
+                        [ class "turn"
                         ]
-                        [ text "Play" ]
-                    ]
-                , span
-                    []
-                    [ button
-                        [ class "shuffle"
-                        , onClick Shuffle
-                        ]
-                        [ text "Shuffle" ]
+                        [ text "Your Turn" ]
                     ]
                 ]
             , Battlefield.view ships

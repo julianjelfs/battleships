@@ -19,7 +19,7 @@ view model =
                 [ class "header" ]
                 [ h1
                     [ class "title" ]
-                    [ text "Place your ships" ]
+                    [ text "Shuffle your ships until happy" ]
                 , span
                     []
                     [ button
