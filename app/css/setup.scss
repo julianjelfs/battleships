@@ -5,11 +5,12 @@
 
   .header {
     h1 {
-      width:80%;
+      width:60%;
       float:left;
     }
-    .shuffle {
+    .shuffle, .play {
       margin-top:10px;
+      margin-left: 10px;
       padding:10px;
       min-width:200px;
       font-size: 1.5em;
@@ -17,6 +18,10 @@
       cursor:pointer;
       float:right;
       background-color: $secondary;
+    }
+
+    .play {
+        background-color: $primary;
     }
   }
 

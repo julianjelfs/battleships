@@ -2,7 +2,6 @@ module SetUp exposing (view)
 
 import Char exposing (fromCode)
 import Color
-import Debug exposing (log)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
@@ -13,35 +12,49 @@ import Types exposing (..)
 headerCol c =
     th [] [ text c ]
 
-coordsAndColor ship =
-    List.map (\(x, y, _) -> (x, y, ship.color)) ship.positions
 
-cellCoveredByShip: (Int, Int) -> List (Int, Int, Color.Color) -> Maybe Color.Color
-cellCoveredByShip (x, y) ships =
+coordsAndColor ship =
+    List.map (\( x, y, _ ) -> ( x, y, ship.color )) ship.positions
+
+
+cellCoveredByShip : ( Int, Int ) -> List ( Int, Int, Color.Color ) -> Maybe Color.Color
+cellCoveredByShip ( x, y ) ships =
     let
-        match = ships
-            |> List.filter (\(x1, y1, _) -> x == x1 && y == y1)
-            |> List.head
+        match =
+            ships
+                |> List.filter (\( x1, y1, _ ) -> x == x1 && y == y1)
+                |> List.head
     in
         case match of
-            Just (_, _, c) -> Just c
-            _ -> Nothing
+            Just ( _, _, c ) ->
+                Just c
+
+            _ ->
+                Nothing
+
 
 gridCol ships y x =
     let
         s =
-            case cellCoveredByShip (x, y) ships of
-                Nothing -> []
+            case cellCoveredByShip ( x, y ) ships of
+                Nothing ->
+                    []
+
                 Just c ->
                     let
-                        rgba = Color.toRgb c
-                        str = "rgb("
-                            ++ (toString rgba.red)
-                            ++ "," ++ (toString rgba.green)
-                            ++ "," ++ (toString rgba.blue)
-                            ++ ")"
+                        rgba =
+                            Color.toRgb c
+
+                        str =
+                            "rgb("
+                                ++ (toString rgba.red)
+                                ++ ","
+                                ++ (toString rgba.green)
+                                ++ ","
+                                ++ (toString rgba.blue)
+                                ++ ")"
                     in
-                        [ ("backgroundColor", str) ]
+                        [ ( "backgroundColor", str ) ]
     in
         td
             [ style s ]
@@ -64,7 +77,7 @@ gridRow ships y =
         (td [] [ text (toString y) ] :: List.map (gridCol ships y) (List.range 1 10))
 
 
-grid : List (Int, Int, Color.Color) -> Html Msg
+grid : List ( Int, Int, Color.Color ) -> Html Msg
 grid ships =
     table
         []
@@ -90,8 +103,17 @@ view model =
                 , span
                     []
                     [ button
+                        [ class "play"
+                        , onClick (NavigateTo "game")
+                        ]
+                        [ text "Play" ]
+                    ]
+                , span
+                    []
+                    [ button
                         [ class "shuffle"
-                        , onClick Shuffle ]
+                        , onClick Shuffle
+                        ]
                         [ text "Shuffle" ]
                     ]
                 ]
