@@ -39,8 +39,7 @@ type Msg
 
 type Route
     = StartRoute
-    | ShareRoute
-    | SetUp
+    | SetUpRoute
     | GameRoute
 
 type alias Model =

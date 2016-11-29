@@ -1,6 +1,7 @@
 module View exposing (..)
 
 import Dict
+import Game
 import Html.Events exposing (onClick)
 import Routing exposing (..)
 import Types exposing (..)
@@ -24,7 +25,7 @@ menu model =
     div []
         [ div [ class "menu" ]
             [ button
-                [ onClick (NavigateTo "")
+                [ onClick (NavigateTo "home")
                 ]
                 [ text "Home" ]
             , button
@@ -45,14 +46,11 @@ pageView model =
         Just StartRoute ->
             Start.view model
 
-        Just SetUp ->
+        Just SetUpRoute ->
             SetUp.view model
 
-        Just ShareRoute ->
-            div [] [ h2 [ class "title" ] [ text "Share" ] ]
-
         Just GameRoute ->
-            div [] [ h2 [ class "title" ] [ text "Play Game" ] ]
+            Game.view model
 
         _ ->
             div [] [ h2 [ class "title" ] [ text "Not found" ] ]

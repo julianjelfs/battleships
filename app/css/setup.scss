@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'battlefield';
 
 .setup {
   width:70%;
@@ -25,34 +26,4 @@
     }
   }
 
-  .battlefield {
-    clear:both;
-    border:1px solid $border;
-    min-height:500px;
-    text-align: center;
-
-    table {
-      border-collapse: collapse;
-      background-color: #eee;
-      width:100%;
-      td {
-        border:1px solid #ccc;
-        width:(100% / 11);
-        height:50px;
-        background-color: #fff;
-
-        &.covered {
-          background-color: $primary;
-        }
-        &.row-index {
-          background-color: #eee;
-          border-left:none;
-          font-weight: bold;
-        }
-      }
-      tr:last-child td {
-        border-bottom: none;
-      }
-    }
-  }
 }

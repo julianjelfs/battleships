@@ -1,4 +1,4 @@
-module Ships exposing (getRandomShips)
+module Ships exposing (getRandomShips, coordsAndColor)
 
 import Color
 import Time
@@ -132,3 +132,7 @@ getRandomShips =
                     |> Task.succeed
             )
         |> Task.perform PositionShips
+
+coordsAndColor: Ship -> List (Int, Int, Color.Color)
+coordsAndColor ship =
+    List.map (\( x, y, _ ) -> ( x, y, ship.color )) ship.positions

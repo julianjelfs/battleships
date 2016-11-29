@@ -12,16 +12,25 @@ urlChange location model =
 
         cmd =
             case mr of
-                Just SetUp -> getRandomShips
+                Just SetUpRoute ->
+                    case model.myShips of
+                        [] -> getRandomShips
+                        _ -> Cmd.none
+                Just StartRoute -> Cmd.none
+                Just GameRoute ->
+                    case model.myShips of
+                        [] ->
+                            Navigation.newUrl "home"
+                        _ -> Cmd.none
                 _ -> Cmd.none
     in
-    ({model | route = mr}, cmd)
+        ({model | route = mr}, cmd)
 
 routes =
     Url.oneOf
         [ Url.map StartRoute (Url.s "")
-        , Url.map SetUp (Url.s "setup")
-        , Url.map ShareRoute (Url.s "share")
+        , Url.map StartRoute (Url.s "home")
+        , Url.map SetUpRoute (Url.s "setup")
         , Url.map GameRoute (Url.s "game")
         ]
 

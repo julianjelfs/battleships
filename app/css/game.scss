@@ -1,0 +1,13 @@
+@import 'variables';
+@import 'battlefield';
+
+.game {
+  width: 70%;
+
+  .header {
+    h1 {
+      width: 50%;
+      float: left;
+    }
+  }
+}

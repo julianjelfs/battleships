@@ -1,4 +1,4 @@
-module SetUp exposing (view)
+module Game exposing (view)
 
 import Html exposing (..)
 import Html.Events exposing (..)
@@ -7,6 +7,7 @@ import Types exposing (..)
 import Battlefield
 import Ships exposing (coordsAndColor)
 
+
 view : Model -> Html Msg
 view model =
     let
@@ -14,12 +15,12 @@ view model =
             model.myShips
                 |> List.concatMap coordsAndColor
     in
-        div [ class "setup" ]
+        div [ class "game" ]
             [ div
                 [ class "header" ]
                 [ h1
                     [ class "title" ]
-                    [ text "Place your ships" ]
+                    [ text "Play the Game" ]
                 , span
                     []
                     [ button
