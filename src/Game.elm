@@ -29,5 +29,13 @@ view model =
                         [ text "Your Turn" ]
                     ]
                 ]
-            , Battlefield.view ships
+            , div
+                []
+                []
+            , div
+                [ class "me" ]
+                [ Battlefield.view ships ]
+            , div
+                [ class "opponent" ]
+                [ Battlefield.view [] ]
             ]

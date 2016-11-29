@@ -2,7 +2,6 @@
 @import 'battlefield';
 
 .game {
-  width: 70%;
 
   .header {
     h1 {
@@ -16,5 +15,11 @@
     .turn {
       background-color: $primary;
     }
+  }
+
+  .opponent, .me {
+    width: 50%;
+    float: right;
+    padding:10px;
   }
 }
