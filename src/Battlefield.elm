@@ -27,7 +27,7 @@ cellCoveredByShip ( x, y ) ships =
                 Nothing
 
 
-gridCol ships y x =
+gridCol ships commander y x =
     let
         s =
             case cellCoveredByShip ( x, y ) ships of
@@ -40,18 +40,27 @@ gridCol ships y x =
                             Color.toRgb c
 
                         str =
-                            "rgb("
+                            "rgba("
                                 ++ (toString rgba.red)
                                 ++ ","
                                 ++ (toString rgba.green)
                                 ++ ","
                                 ++ (toString rgba.blue)
+                                ++ ","
+                                ++ (toString (case commander of
+                                    Opponent -> 0.05
+                                    Me -> 1))
                                 ++ ")"
                     in
                         [ ( "backgroundColor", str ) ]
     in
         td
-            [ style s ]
+            (case commander of
+                Opponent ->
+                    [ style s
+                    , onClick (Attack (x, y))]
+                Me ->
+                    [ style s ])
             []
 
 
@@ -65,27 +74,27 @@ headerRow =
             (th [] [] :: (List.map headerCol range))
 
 
-gridRow ships y =
+gridRow ships commander y =
     tr
         []
         (td
             [ class "row-index" ]
-            [ text (toString y) ] :: List.map (gridCol ships y) (List.range 1 10))
+            [ text (toString y) ] :: List.map (gridCol ships commander y) (List.range 1 10))
 
 
-grid : List ( Int, Int, Color.Color ) -> Html Msg
-grid ships =
+grid : List ( Int, Int, Color.Color ) -> Commander -> Html Msg
+grid ships commander =
     table
         []
         [ tbody
             []
-            (headerRow :: (List.map (gridRow ships) (List.range 1 10)))
+            (headerRow :: (List.map (gridRow ships commander) (List.range 1 10)))
         ]
 
 
-view : List (Int, Int, Color.Color) -> Html Msg
-view ships =
+view : List (Int, Int, Color.Color) -> Commander -> Html Msg
+view ships commander =
     div
         [ class "battlefield" ]
-        [ grid ships
+        [ grid ships commander
         ]

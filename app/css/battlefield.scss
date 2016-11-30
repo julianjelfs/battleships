@@ -22,7 +22,12 @@
         border-left:none;
         font-weight: bold;
       }
+
+      .opponent & {
+        cursor: pointer;
+      }
     }
+
     tr:last-child td {
       border-bottom: none;
     }

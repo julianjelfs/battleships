@@ -11,8 +11,12 @@ import Ships exposing (coordsAndColor)
 view : Model -> Html Msg
 view model =
     let
-        ships =
+        myShips =
             model.myShips
+                |> List.concatMap coordsAndColor
+
+        yourShips =
+            model.yourShips
                 |> List.concatMap coordsAndColor
     in
         div [ class "game" ]
@@ -33,9 +37,9 @@ view model =
                 [ class "play-area" ]
                 [ div
                     [ class "opponent" ]
-                    [ Battlefield.view [] ]
+                    [ Battlefield.view yourShips Opponent ]
                 , div
                     [ class "me" ]
-                    [ Battlefield.view ships ]
+                    [ Battlefield.view myShips Me ]
                 ]
             ]

@@ -1,4 +1,4 @@
-module Ships exposing (getRandomShips, coordsAndColor)
+module Ships exposing (getBothBattlefields, coordsAndColor)
 
 import Color
 import Time
@@ -121,8 +121,12 @@ randomShips seed =
             ( [], seed )
         |> Tuple.first
 
+getBothBattlefields =
+    Cmd.batch
+        [ getRandomShips Me
+        , getRandomShips Opponent ]
 
-getRandomShips =
+getRandomShips cmdr =
     Time.now
         |> Task.andThen
             (\t ->
@@ -131,6 +135,7 @@ getRandomShips =
                     |> randomShips
                     |> Task.succeed
             )
+        |> Task.map (\s -> (cmdr, s))
         |> Task.perform PositionShips
 
 coordsAndColor: Ship -> List (Int, Int, Color.Color)

@@ -1,7 +1,7 @@
 module Routing exposing (..)
 
 import Navigation
-import Ships exposing (getRandomShips)
+import Ships exposing (getBothBattlefields)
 import Types exposing (..)
 import UrlParser as Url
 
@@ -14,7 +14,7 @@ urlChange location model =
             case mr of
                 Just SetUpRoute ->
                     case model.myShips of
-                        [] -> getRandomShips
+                        [] -> getBothBattlefields
                         _ -> Cmd.none
                 Just StartRoute -> Cmd.none
                 Just GameRoute ->

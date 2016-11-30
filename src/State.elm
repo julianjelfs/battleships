@@ -4,7 +4,7 @@ import Array exposing (Array)
 import Types exposing (..)
 import Navigation
 import Routing exposing (urlChange)
-import Ships exposing (getRandomShips)
+import Ships exposing (getBothBattlefields)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -16,8 +16,15 @@ update msg model =
         UrlChange location ->
             urlChange location model
 
-        PositionShips ships ->
-            ( { model | myShips = ships }, Cmd.none )
+        PositionShips (cmdr, ships) ->
+            case cmdr of
+                Me ->
+                    ( { model | myShips = ships }, Cmd.none )
+                Opponent ->
+                    ( { model | yourShips = ships }, Cmd.none )
 
         Shuffle ->
-            ( model, getRandomShips )
+            ( model, getBothBattlefields )
+
+        Attack (x, y) ->
+            ( model, Cmd.none )

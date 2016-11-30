@@ -37,5 +37,5 @@ view model =
                         [ text "Shuffle" ]
                     ]
                 ]
-            , Battlefield.view ships
+            , Battlefield.view ships Me
             ]

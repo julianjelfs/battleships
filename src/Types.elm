@@ -32,10 +32,15 @@ type GameMode
 
 
 type Msg
-    = PositionShips Ships
+    = PositionShips (Commander, Ships)
     | UrlChange Navigation.Location
     | NavigateTo String
     | Shuffle
+    | Attack (Int, Int)
+
+type Commander
+    = Me
+    | Opponent
 
 type Route
     = StartRoute
@@ -46,9 +51,10 @@ type alias Model =
     { route : Maybe Route
     , mode : GameMode
     , myShips : Ships
+    , yourShips : Ships
     }
 
 
 initialModel : Model
 initialModel =
-    Model Nothing Alternate []
+    Model Nothing Alternate [] []
