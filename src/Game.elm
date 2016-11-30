@@ -30,12 +30,12 @@ view model =
                     ]
                 ]
             , div
-                []
-                []
-            , div
-                [ class "me" ]
-                [ Battlefield.view ships ]
-            , div
-                [ class "opponent" ]
-                [ Battlefield.view [] ]
+                [ class "play-area" ]
+                [ div
+                    [ class "opponent" ]
+                    [ Battlefield.view [] ]
+                , div
+                    [ class "me" ]
+                    [ Battlefield.view ships ]
+                ]
             ]

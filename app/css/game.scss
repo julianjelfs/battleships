@@ -17,9 +17,21 @@
     }
   }
 
-  .opponent, .me {
-    width: 50%;
-    float: right;
-    padding:10px;
+  .play-area {
+      clear:both;
+      .opponent, .me {
+          float: left;
+      }
+
+      .me {
+          padding-left:10px;
+          width: 40%;
+      }
+
+      .opponent {
+          padding-right:10px;
+          width: 60%;
+      }
   }
+
 }
