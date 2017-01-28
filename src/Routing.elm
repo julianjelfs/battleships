@@ -13,12 +13,12 @@ urlChange location model =
         cmd =
             case mr of
                 Just SetUpRoute ->
-                    case model.myShips of
+                    case model.myState.ships of
                         [] -> getBothBattlefields
                         _ -> Cmd.none
                 Just StartRoute -> Cmd.none
                 Just GameRoute ->
-                    case model.myShips of
+                    case model.myState.ships of
                         [] ->
                             Navigation.newUrl "home"
                         _ -> Cmd.none

@@ -12,11 +12,11 @@ view : Model -> Html Msg
 view model =
     let
         myShips =
-            model.myShips
+            model.myState.ships
                 |> List.concatMap coordsAndColor
 
         yourShips =
-            model.yourShips
+            model.yourState.ships
                 |> List.concatMap coordsAndColor
     in
         div [ class "game" ]

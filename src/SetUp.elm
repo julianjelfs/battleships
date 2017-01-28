@@ -11,7 +11,7 @@ view : Model -> Html Msg
 view model =
     let
         ships =
-            model.myShips
+            model.myState.ships
                 |> List.concatMap coordsAndColor
     in
         div [ class "setup" ]

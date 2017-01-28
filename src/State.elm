@@ -5,6 +5,7 @@ import Types exposing (..)
 import Navigation
 import Routing exposing (urlChange)
 import Ships exposing (getBothBattlefields)
+import Player.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -16,15 +17,19 @@ update msg model =
         UrlChange location ->
             urlChange location model
 
-        PositionShips (cmdr, ships) ->
-            case cmdr of
-                Me ->
-                    ( { model | myShips = ships }, Cmd.none )
-                Opponent ->
-                    ( { model | yourShips = ships }, Cmd.none )
+        PlayerMsg sub ->
+            ( { model | yourState = Player.State.update sub model.yourState
+            , myState = Player.State.update sub model.myState }, Cmd.none )
 
         Shuffle ->
             ( model, getBothBattlefields )
 
         Attack (x, y) ->
-            ( model, Cmd.none )
+            let
+                --work out whether this coord is part of an opponent's ship
+                match =
+                    model.yourShips
+                        |> List.filter (\( x1, y1, _ ) -> x == x1 && y == y1)
+                        |> List.head
+            in
+                ( model, Cmd.none )

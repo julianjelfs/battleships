@@ -4,6 +4,7 @@ import Color exposing (Color)
 import Navigation
 import Set exposing (Set)
 import UrlParser as Url
+import Player.Types
 
 
 type alias ShipCell =
@@ -11,6 +12,9 @@ type alias ShipCell =
 
 --much better structure for ships would be Dict (Int, Int) (Bool, Color)
 --refactor next time
+
+
+--we have a circular ref here. This always happens. I think a better structure might be to split Models and Actions
 
 type alias Ship =
     { positions : List ShipCell
@@ -32,11 +36,11 @@ type GameMode
 
 
 type Msg
-    = PositionShips (Commander, Ships)
-    | UrlChange Navigation.Location
+    = UrlChange Navigation.Location
     | NavigateTo String
     | Shuffle
     | Attack (Int, Int)
+    | PlayerMsg Player.Types.Msg
 
 type Commander
     = Me
@@ -47,14 +51,25 @@ type Route
     | SetUpRoute
     | GameRoute
 
+type alias PlayerState =
+    { ships : Ships
+    , hits : Set (Int, Int)
+    , misses : Set (Int, Int)
+    , commander : Commander
+    }
+
 type alias Model =
     { route : Maybe Route
     , mode : GameMode
-    , myShips : Ships
-    , yourShips : Ships
+    , myState : PlayerState
+    , yourState : PlayerState
     }
 
 
 initialModel : Model
 initialModel =
-    Model Nothing Alternate [] []
+    Model
+        Nothing
+        Alternate
+        (PlayerState [] Set.empty Set.empty Me)
+        (PlayerState [] Set.empty Set.empty Opponent)
