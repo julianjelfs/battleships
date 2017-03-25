@@ -3,6 +3,7 @@ module Battlefield exposing (view)
 import Char exposing (fromCode)
 import Color
 import Types exposing (..)
+import Actions exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)

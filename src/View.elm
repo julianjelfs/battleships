@@ -5,6 +5,7 @@ import Game
 import Html.Events exposing (onClick)
 import Routing exposing (..)
 import Types exposing (..)
+import Actions exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Start

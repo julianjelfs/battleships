@@ -3,6 +3,7 @@ module Main exposing (..)
 import Navigation
 import Routing exposing (urlChange)
 import Types exposing (..)
+import Actions exposing (..)
 import View exposing (..)
 import State exposing (update)
 

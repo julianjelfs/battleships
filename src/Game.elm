@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Types exposing (..)
+import Actions exposing (..)
 import Battlefield
 import Ships exposing (coordsAndColor)
 

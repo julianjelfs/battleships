@@ -1,0 +1,40 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Commander	./src\Types.elm	/^type Commander$/;"	t
+Direction	./src\Types.elm	/^type Direction$/;"	t
+GameMode	./src\Types.elm	/^type GameMode$/;"	t
+Model	./src\Types.elm	/^type alias Model =$/;"	a
+Msg	./src\Player\Types.elm	/^type Msg =$/;"	t
+Msg	./src\Types.elm	/^type Msg$/;"	t
+PlayerState	./src\Types.elm	/^type alias PlayerState =$/;"	a
+Route	./src\Types.elm	/^type Route$/;"	t
+Ship	./src\Types.elm	/^type alias Ship =$/;"	a
+ShipCell	./src\Types.elm	/^type alias ShipCell =$/;"	a
+Ships	./src\Types.elm	/^type alias Ships =$/;"	a
+cellCoveredByShip	./src\Battlefield.elm	/^cellCoveredByShip : ( Int, Int ) -> List ( Int, Int, Color.Color ) -> Maybe Color.Color$/;"	f
+coordsAndColor	./src\Ships.elm	/^coordsAndColor: Ship -> List (Int, Int, Color.Color)$/;"	f
+direction	./src\Ships.elm	/^direction : Generator Direction$/;"	c
+doesntOverlap	./src\Ships.elm	/^doesntOverlap : List ( Int, Int ) -> ShipCell -> Bool$/;"	f
+getValidShip	./src\Ships.elm	/^getValidShip : Int -> Random.Seed -> Ships -> ( List ShipCell, Random.Seed )$/;"	f
+grid	./src\Battlefield.elm	/^grid : List ( Int, Int, Color.Color ) -> Commander -> Html Msg$/;"	f
+inbounds	./src\Ships.elm	/^inbounds : ShipCell -> Bool$/;"	f
+init	./src\Main.elm	/^init : Navigation.Location -> ( Model, Cmd Msg )$/;"	f
+initialModel	./src\Types.elm	/^initialModel : Model$/;"	c
+pageView	./src\View.elm	/^pageView : Model -> Html Msg$/;"	f
+point	./src\Ships.elm	/^point : Generator ( Int, Int )$/;"	c
+randomShips	./src\Ships.elm	/^randomShips : Random.Seed -> Ships$/;"	f
+shipGenerator	./src\Ships.elm	/^shipGenerator : Int -> Generator (List ShipCell)$/;"	f
+subscriptions	./src\Main.elm	/^subscriptions : Model -> Sub Msg$/;"	f
+update	./src\Player\State.elm	/^update : Msg -> PlayerState -> PlayerState$/;"	f
+update	./src\State.elm	/^update : Msg -> Model -> ( Model, Cmd Msg )$/;"	f
+urlChange	./src\Routing.elm	/^urlChange: Navigation.Location -> Model -> (Model, Cmd Msg)$/;"	f
+validPosition	./src\Ships.elm	/^validPosition : Ships -> List ShipCell -> Bool$/;"	f
+view	./src\Battlefield.elm	/^view : List (Int, Int, Color.Color) -> Commander -> Html Msg$/;"	f
+view	./src\Game.elm	/^view : Model -> Html Msg$/;"	f
+view	./src\SetUp.elm	/^view : Model -> Html Msg$/;"	f
+view	./src\Start.elm	/^view : Model -> Html Msg$/;"	f
+view	./src\View.elm	/^view : Model -> Html Msg$/;"	f

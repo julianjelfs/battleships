@@ -8,6 +8,8 @@ import Random.Array as RA
 import Random exposing (generate, Generator, Seed)
 import Tuple
 import Types exposing (..)
+import Actions exposing (..)
+import Player.Actions exposing (..)
 
 
 carrier =
@@ -123,8 +125,8 @@ randomShips seed =
 
 getBothBattlefields =
     Cmd.batch
-        [ getRandomShips Me
-        , getRandomShips Opponent ]
+        [ Cmd.map PlayerMsg (getRandomShips Me)
+        , Cmd.map PlayerMsg (getRandomShips Opponent) ]
 
 getRandomShips cmdr =
     Time.now

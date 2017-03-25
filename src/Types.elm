@@ -4,7 +4,6 @@ import Color exposing (Color)
 import Navigation
 import Set exposing (Set)
 import UrlParser as Url
-import Player.Types
 
 
 type alias ShipCell =
@@ -14,17 +13,13 @@ type alias ShipCell =
 --refactor next time
 
 
---we have a circular ref here. This always happens. I think a better structure might be to split Models and Actions
-
 type alias Ship =
     { positions : List ShipCell
     , color: Color
     }
 
-
 type alias Ships =
     List Ship
-
 
 type Direction
     = Horizontal
@@ -34,13 +29,6 @@ type GameMode
     = Alternate
     | SwitchOnMiss
 
-
-type Msg
-    = UrlChange Navigation.Location
-    | NavigateTo String
-    | Shuffle
-    | Attack (Int, Int)
-    | PlayerMsg Player.Types.Msg
 
 type Commander
     = Me

@@ -1,4 +1,4 @@
-module Player.Types exposing (..)
+module Player.Actions exposing (..)
 
 import Types exposing (Commander, Ships)
 

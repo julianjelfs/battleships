@@ -6,6 +6,7 @@ import Navigation
 import Routing exposing (urlChange)
 import Ships exposing (getBothBattlefields)
 import Player.State
+import Actions exposing (..)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -28,7 +29,8 @@ update msg model =
             let
                 --work out whether this coord is part of an opponent's ship
                 match =
-                    model.yourShips
+                    model.yourState.ships
+                        |> List.concatMap .positions
                         |> List.filter (\( x1, y1, _ ) -> x == x1 && y == y1)
                         |> List.head
             in
