@@ -55,7 +55,7 @@ point =
         (Random.int 0 10)
 
 
-shipGenerator : Int -> Generator (List ShipCell)
+shipGenerator : Int -> Generator (List Coord)
 shipGenerator length =
     Random.map2
         (\d ( x, y ) ->
@@ -64,40 +64,38 @@ shipGenerator length =
                     (\n ->
                         case d of
                             Horizontal ->
-                                ( x, (y + n), False )
+                                ( x, (y + n))
 
                             Vertical ->
-                                ( (x + n), y, False )
+                                ( (x + n), y)
                     )
         )
         direction
         point
 
 
-inbounds : ShipCell -> Bool
-inbounds ( x, y, _ ) =
+inbounds : Coord -> Bool
+inbounds ( x, y ) =
     x > 0 && x <= 10 && y > 0 && y <= 10
 
 
-doesntOverlap : List ( Int, Int ) -> ShipCell -> Bool
-doesntOverlap others ( x, y, _ ) =
-    List.member ( x, y ) others |> not
+doesntOverlap : List Coord -> Coord -> Bool
+doesntOverlap others coord =
+    List.member coord others |> not
 
 
-validPosition : Ships -> List ShipCell -> Bool
-validPosition ships shipCells =
+validPosition : List Ship -> List Coord -> Bool
+validPosition ships coords =
     let
         allPos =
-            List.concatMap
-                (\s -> (List.map (\( x, y, _ ) -> ( x, y )) s.positions))
-                ships
+            List.concatMap .positions ships
     in
         List.all
             (\c -> inbounds c && doesntOverlap allPos c)
-            shipCells
+            coords
 
 
-getValidShip : Int -> Random.Seed -> Ships -> ( List ShipCell, Random.Seed )
+getValidShip : Int -> Random.Seed -> List Ship -> ( List Coord, Random.Seed )
 getValidShip n seed ships =
     let
         ( shipCells, nextSeed ) =
@@ -109,7 +107,7 @@ getValidShip n seed ships =
             getValidShip n nextSeed ships
 
 
-randomShips : Random.Seed -> Ships
+randomShips : Random.Seed -> List Ship
 randomShips seed =
     allShips
         |> List.foldl
@@ -125,14 +123,14 @@ randomShips seed =
 
 getBothBattlefields =
     Cmd.batch
-        [ Cmd.map PlayerMsg (getRandomShips Me)
-        , Cmd.map PlayerMsg (getRandomShips Opponent) ]
+        [ Cmd.map PlayerMsg (getRandomShips Me 0)
+        , Cmd.map PlayerMsg (getRandomShips Opponent 1000) ]
 
-getRandomShips cmdr =
+getRandomShips cmdr offset =
     Time.now
         |> Task.andThen
             (\t ->
-                round t
+                (round t) + offset
                     |> Random.initialSeed
                     |> randomShips
                     |> Task.succeed
@@ -142,4 +140,4 @@ getRandomShips cmdr =
 
 coordsAndColor: Ship -> List (Int, Int, Color.Color)
 coordsAndColor ship =
-    List.map (\( x, y, _ ) -> ( x, y, ship.color )) ship.positions
+    List.map (\( x, y ) -> ( x, y, ship.color )) ship.positions

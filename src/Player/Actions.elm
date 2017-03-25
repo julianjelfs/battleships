@@ -1,6 +1,6 @@
 module Player.Actions exposing (..)
 
-import Types exposing (Commander, Ships)
+import Types exposing (Commander, Ship)
 
 type Msg =
-    PositionShips (Commander, Ships)
+    PositionShips (Commander, List Ship)

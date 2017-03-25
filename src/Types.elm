@@ -6,20 +6,17 @@ import Set exposing (Set)
 import UrlParser as Url
 
 
-type alias ShipCell =
-    ( Int, Int, Bool )
+type alias Coord =
+    ( Int, Int )
 
 --much better structure for ships would be Dict (Int, Int) (Bool, Color)
 --refactor next time
 
 
 type alias Ship =
-    { positions : List ShipCell
+    { positions : List Coord
     , color: Color
     }
-
-type alias Ships =
-    List Ship
 
 type Direction
     = Horizontal
@@ -40,7 +37,7 @@ type Route
     | GameRoute
 
 type alias PlayerState =
-    { ships : Ships
+    { ships : List Ship
     , hits : Set (Int, Int)
     , misses : Set (Int, Int)
     , commander : Commander

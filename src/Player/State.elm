@@ -1,7 +1,7 @@
 module Player.State exposing (update)
 
 import Player.Actions exposing (..)
-import Types exposing (Commander, PlayerState, Ships)
+import Types exposing (Commander, PlayerState)
 
 update : Msg -> PlayerState -> PlayerState
 update msg model =

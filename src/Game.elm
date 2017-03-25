@@ -11,36 +11,27 @@ import Ships exposing (coordsAndColor)
 
 view : Model -> Html Msg
 view model =
-    let
-        myShips =
-            model.myState.ships
-                |> List.concatMap coordsAndColor
-
-        yourShips =
-            model.yourState.ships
-                |> List.concatMap coordsAndColor
-    in
-        div [ class "game" ]
-            [ div
-                [ class "header" ]
-                [ h1
-                    [ class "title" ]
-                    [ text "Play the Game" ]
-                , span
-                    []
-                    [ button
-                        [ class "turn"
-                        ]
-                        [ text "Your Turn" ]
+    div [ class "game" ]
+        [ div
+            [ class "header" ]
+            [ h1
+                [ class "title" ]
+                [ text "Play the Game" ]
+            , span
+                []
+                [ button
+                    [ class "turn"
                     ]
-                ]
-            , div
-                [ class "play-area" ]
-                [ div
-                    [ class "opponent" ]
-                    [ Battlefield.view yourShips Opponent ]
-                , div
-                    [ class "me" ]
-                    [ Battlefield.view myShips Me ]
+                    [ text "Your Turn" ]
                 ]
             ]
+        , div
+            [ class "play-area" ]
+            [ div
+                [ class "opponent" ]
+                [ Battlefield.view model.yourState ]
+            , div
+                [ class "me" ]
+                [ Battlefield.view model.myState ]
+            ]
+        ]

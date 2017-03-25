@@ -2,12 +2,14 @@ module Battlefield exposing (view)
 
 import Char exposing (fromCode)
 import Color
+import Ships exposing (coordsAndColor)
 import Types exposing (..)
 import Actions exposing (..)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import String exposing (fromChar, toUpper)
+import Set
 
 headerCol c =
     th [] [ text c ]
@@ -28,8 +30,12 @@ cellCoveredByShip ( x, y ) ships =
                 Nothing
 
 
-gridCol ships commander y x =
+gridCol state ships y x =
     let
+        hit = Set.member (x, y) state.hits
+
+        miss = Set.member (x, y) state.misses
+
         s =
             case cellCoveredByShip ( x, y ) ships of
                 Nothing ->
@@ -48,7 +54,7 @@ gridCol ships commander y x =
                                 ++ ","
                                 ++ (toString rgba.blue)
                                 ++ ","
-                                ++ (toString (case commander of
+                                ++ (toString (case state.commander of
                                     Opponent -> 0.05
                                     Me -> 1))
                                 ++ ")"
@@ -56,10 +62,11 @@ gridCol ships commander y x =
                         [ ( "backgroundColor", str ) ]
     in
         td
-            (case commander of
+            (case state.commander of
                 Opponent ->
                     [ style s
-                    , onClick (Attack (x, y))]
+                    , classList [("hit", hit), ("miss", miss)]
+                    , onClick (Attack Me (x, y))]
                 Me ->
                     [ style s ])
             []
@@ -75,27 +82,31 @@ headerRow =
             (th [] [] :: (List.map headerCol range))
 
 
-gridRow ships commander y =
+gridRow state ships y =
     tr
         []
         (td
             [ class "row-index" ]
-            [ text (toString y) ] :: List.map (gridCol ships commander y) (List.range 1 10))
+            [ text (toString y) ] :: List.map (gridCol state ships y) (List.range 1 10))
 
 
-grid : List ( Int, Int, Color.Color ) -> Commander -> Html Msg
-grid ships commander =
+grid : PlayerState -> List ( Int, Int, Color.Color ) -> Html Msg
+grid state ships =
     table
         []
         [ tbody
             []
-            (headerRow :: (List.map (gridRow ships commander) (List.range 1 10)))
+            (headerRow :: (List.map (gridRow state ships) (List.range 1 10)))
         ]
 
 
-view : List (Int, Int, Color.Color) -> Commander -> Html Msg
-view ships commander =
+view : PlayerState -> Html Msg
+view state =
+    let
+        ships = state.ships
+            |> List.concatMap coordsAndColor
+    in
     div
         [ class "battlefield" ]
-        [ grid ships commander
+        [ grid state ships
         ]

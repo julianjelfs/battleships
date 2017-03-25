@@ -26,6 +26,18 @@
       .opponent & {
         cursor: pointer;
       }
+
+      &.hit, &.miss {
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &.hit {
+        background-image: url("../img/bomb.png");
+      }
+       &.miss {
+         background-image: url("../img/flag.png");
+       }
     }
 
     tr:last-child td {
