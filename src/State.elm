@@ -33,6 +33,22 @@ update msg model =
         GameOver winner ->
             ({ model | gameState = Finished winner }, Cmd.none)
 
+        Think _ ->
+            let
+                thinking = model.thinking - 1
+
+                fx =
+                    case thinking of
+                        0 ->
+                            case model.gameState of
+                                Playing Opponent ->
+                                    Task.perform (Attack Opponent) (Task.succeed (1,1))
+                                _ -> Cmd.none
+                        _ -> Cmd.none
+            in
+                ( { model | thinking =  thinking }
+                , fx )
+
         Attack cmdr (x, y) ->
             let
                 _ = Debug.log "Attack!" (x, y)
@@ -59,7 +75,7 @@ update msg model =
 
 
             in
-                ( { updatedModel | gameState = Playing <| otherPlayer cmdr }
+                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 3}
                 , case Set.size updatedVictim.hits of
                     17 -> Task.perform GameOver (Task.succeed attacker.commander)
                     _ -> Cmd.none

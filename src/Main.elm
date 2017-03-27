@@ -6,6 +6,7 @@ import Types exposing (..)
 import Actions exposing (..)
 import View exposing (..)
 import State exposing (update)
+import Time exposing (every, second)
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -15,7 +16,10 @@ init location =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    case model.gameState of
+        Playing Opponent ->
+            every second Think
+        _ -> Sub.none
 
 
 main =

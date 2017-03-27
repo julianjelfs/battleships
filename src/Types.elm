@@ -54,6 +54,7 @@ type alias Model =
     , myState : PlayerState
     , yourState : PlayerState
     , gameState : GameState
+    , thinking : Int
     }
 
 
@@ -65,3 +66,4 @@ initialModel =
         (PlayerState [] Set.empty Set.empty Me)
         (PlayerState [] Set.empty Set.empty Opponent)
         NotStarted
+        5

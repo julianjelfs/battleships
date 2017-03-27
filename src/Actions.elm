@@ -2,6 +2,7 @@ module Actions exposing (..)
 
 import Navigation
 import Player.Actions as Player
+import Time exposing (Time)
 import Types exposing (..)
 
 type Msg
@@ -12,3 +13,4 @@ type Msg
     | PlayerMsg Player.Msg
     | GameOver Commander
     | StartGame
+    | Think Time
