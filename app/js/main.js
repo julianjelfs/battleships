@@ -6,5 +6,3 @@ import '../img/flag.png'
 import Elm from '../../src/Main.elm'
 
 Elm.Main.fullscreen();
-
-console.log('is this what we are running now?')

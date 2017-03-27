@@ -23,7 +23,7 @@
         font-weight: bold;
       }
 
-      .opponent & {
+      .opponent.my-turn & {
         cursor: pointer;
       }
 

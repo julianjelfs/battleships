@@ -27,14 +27,16 @@ update msg model =
         Shuffle ->
             ( model, getBothBattlefields )
 
+        StartGame ->
+            ( { model | gameState = Playing Me }, Navigation.newUrl "game" )
+
         GameOver winner ->
-            let
-                _ = Debug.log "The winner is " winner
-            in
-                (model, Cmd.none)
+            ({ model | gameState = Finished winner }, Cmd.none)
 
         Attack cmdr (x, y) ->
             let
+                _ = Debug.log "Attack!" (x, y)
+
                 (victim, attacker) =
                     case cmdr of
                         Me -> (model.yourState, model.myState)
@@ -48,14 +50,23 @@ update msg model =
                         |> Maybe.map
                             (\hit -> { victim | hits = Set.insert hit victim.hits } )
                         |> Maybe.withDefault { victim | misses = Set.insert (x, y) victim.misses }
+                        |> Debug.log "Victim"
 
                 updatedModel =
                     case cmdr of
                         Me -> {model | yourState = updatedVictim}
                         Opponent -> {model | myState = updatedVictim}
+
+
             in
-                ( updatedModel
+                ( { updatedModel | gameState = Playing <| otherPlayer cmdr }
                 , case Set.size updatedVictim.hits of
                     17 -> Task.perform GameOver (Task.succeed attacker.commander)
                     _ -> Cmd.none
                 )
+
+
+otherPlayer cmdr =
+    case cmdr of
+        Me -> Opponent
+        Opponent -> Me

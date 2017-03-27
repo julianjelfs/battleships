@@ -20,7 +20,7 @@ view model =
                 []
                 [ button
                     [ class "play"
-                    , onClick (NavigateTo "game")
+                    , onClick StartGame
                     ]
                     [ text "Play" ]
                 ]
@@ -33,5 +33,5 @@ view model =
                     [ text "Shuffle" ]
                 ]
             ]
-        , Battlefield.view model.myState
+        , Battlefield.view model.gameState model.myState
         ]

@@ -30,16 +30,16 @@ cellCoveredByShip ( x, y ) ships =
                 Nothing
 
 
-gridCol state ships y x =
+gridCol gameState playerState ships y x =
     let
-        hit = Set.member (x, y) state.hits
+        hit = Set.member (x, y) playerState.hits
 
-        miss = Set.member (x, y) state.misses
+        miss = Set.member (x, y) playerState.misses
 
         s =
             case cellCoveredByShip ( x, y ) ships of
                 Nothing ->
-                    []
+                    [ ]
 
                 Just c ->
                     let
@@ -54,21 +54,27 @@ gridCol state ships y x =
                                 ++ ","
                                 ++ (toString rgba.blue)
                                 ++ ","
-                                ++ (toString (case state.commander of
+                                ++ (toString (case playerState.commander of
                                     Opponent -> 0.05
                                     Me -> 1))
                                 ++ ")"
                     in
                         [ ( "backgroundColor", str ) ]
+        attrs =
+            [ style s
+            , classList [("hit", hit), ("miss", miss)]
+            ]
     in
         td
-            (case state.commander of
+            (case playerState.commander of
                 Opponent ->
-                    [ style s
-                    , classList [("hit", hit), ("miss", miss)]
-                    , onClick (Attack Me (x, y))]
+                    case gameState of
+                        Playing Me ->
+                            List.append attrs
+                            [ onClick (Attack Me (x, y))]
+                        _ -> attrs
                 Me ->
-                    [ style s ])
+                    attrs)
             []
 
 
@@ -82,31 +88,31 @@ headerRow =
             (th [] [] :: (List.map headerCol range))
 
 
-gridRow state ships y =
+gridRow gameState playerState ships y =
     tr
         []
         (td
             [ class "row-index" ]
-            [ text (toString y) ] :: List.map (gridCol state ships y) (List.range 1 10))
+            [ text (toString y) ] :: List.map (gridCol gameState playerState ships y) (List.range 1 10))
 
 
-grid : PlayerState -> List ( Int, Int, Color.Color ) -> Html Msg
-grid state ships =
+grid : GameState -> PlayerState -> List ( Int, Int, Color.Color ) -> Html Msg
+grid gameState playerState ships =
     table
         []
         [ tbody
             []
-            (headerRow :: (List.map (gridRow state ships) (List.range 1 10)))
+            (headerRow :: (List.map (gridRow gameState playerState ships) (List.range 1 10)))
         ]
 
 
-view : PlayerState -> Html Msg
-view state =
+view : GameState -> PlayerState -> Html Msg
+view gameState playerState =
     let
-        ships = state.ships
+        ships = playerState.ships
             |> List.concatMap coordsAndColor
     in
     div
         [ class "battlefield" ]
-        [ grid state ships
+        [ grid gameState playerState ships
         ]

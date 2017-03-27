@@ -11,3 +11,4 @@ type Msg
     | Attack Commander (Int, Int)
     | PlayerMsg Player.Msg
     | GameOver Commander
+    | StartGame

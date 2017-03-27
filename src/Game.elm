@@ -8,6 +8,12 @@ import Actions exposing (..)
 import Battlefield
 import Ships exposing (coordsAndColor)
 
+turnText : GameState -> String
+turnText gameState =
+    case gameState of
+        Playing Me -> "Your Turn"
+        Playing Opponent -> "Opponent Thinking ..."
+        _ -> "Whoops"
 
 view : Model -> Html Msg
 view model =
@@ -22,16 +28,18 @@ view model =
                 [ button
                     [ class "turn"
                     ]
-                    [ text "Your Turn" ]
+                    [ text <| turnText model.gameState ]
                 ]
             ]
         , div
             [ class "play-area" ]
             [ div
-                [ class "opponent" ]
-                [ Battlefield.view model.yourState ]
+                [ class "opponent"
+                , classList [("my-turn", model.gameState == Playing Me)]
+                ]
+                [ Battlefield.view model.gameState model.yourState ]
             , div
                 [ class "me" ]
-                [ Battlefield.view model.myState ]
+                [ Battlefield.view model.gameState model.myState ]
             ]
         ]

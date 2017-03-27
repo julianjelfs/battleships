@@ -31,6 +31,11 @@ type Commander
     = Me
     | Opponent
 
+type GameState =
+    NotStarted
+    | Playing Commander
+    | Finished Commander
+
 type Route
     = StartRoute
     | SetUpRoute
@@ -48,6 +53,7 @@ type alias Model =
     , mode : GameMode
     , myState : PlayerState
     , yourState : PlayerState
+    , gameState : GameState
     }
 
 
@@ -58,3 +64,4 @@ initialModel =
         Alternate
         (PlayerState [] Set.empty Set.empty Me)
         (PlayerState [] Set.empty Set.empty Opponent)
+        NotStarted
