@@ -9,6 +9,42 @@ import Player.State
 import Actions exposing (..)
 import Set
 import Task
+import Time
+import Random exposing (Generator)
+
+randomCoordinate handler victimState =
+    let
+        rng =
+            List.range 1 10
+
+        allPoints =
+            List.concatMap (\x -> List.map (\y -> (x, y)) rng) rng
+                |> Set.fromList
+
+        invalid =
+            Set.union victimState.hits victimState.misses
+                |> (Set.diff allPoints)
+                |> Set.toList
+                |> Array.fromList
+
+        size =
+            Array.length invalid
+    in
+        Time.now
+            |> Task.map
+                (\t ->
+                    let
+                        index =
+                            (round t)
+                                |> Random.initialSeed
+                                |> Random.step (Random.int 0 (size - 1))
+                                |> Tuple.first
+                    in
+                        Array.get index invalid
+                            |> Maybe.withDefault (0,0)
+                )
+            |> Task.perform handler
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -42,7 +78,7 @@ update msg model =
                         0 ->
                             case model.gameState of
                                 Playing Opponent ->
-                                    Task.perform (Attack Opponent) (Task.succeed (1,1))
+                                    randomCoordinate (Attack Opponent) model.myState
                                 _ -> Cmd.none
                         _ -> Cmd.none
             in
@@ -66,7 +102,6 @@ update msg model =
                         |> Maybe.map
                             (\hit -> { victim | hits = Set.insert hit victim.hits } )
                         |> Maybe.withDefault { victim | misses = Set.insert (x, y) victim.misses }
-                        |> Debug.log "Victim"
 
                 updatedModel =
                     case cmdr of
@@ -75,7 +110,7 @@ update msg model =
 
 
             in
-                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 3}
+                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 2}
                 , case Set.size updatedVictim.hits of
                     17 -> Task.perform GameOver (Task.succeed attacker.commander)
                     _ -> Cmd.none
