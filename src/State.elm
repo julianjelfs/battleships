@@ -11,8 +11,25 @@ import Set
 import Task
 import Time
 import Random exposing (Generator)
+import Dict
 
-randomCoordinate handler victimState =
+surroundingCells (x, y) =
+    [ (x, y-1)
+    , (x-1, y)
+    , (x+1, y)
+    , (x, y+1)
+    ]
+
+nextToAHit hits p =
+    surroundingCells p
+        |> List.any (\p -> Set.member p hits)
+
+scorePoint state p =
+    case nextToAHit state.hits p of
+        True -> (1, p)
+        False -> (0, p)
+
+optimalCoordinate handler victimState =
     let
         rng =
             List.range 1 10
@@ -21,16 +38,22 @@ randomCoordinate handler victimState =
             List.concatMap (\x -> List.map (\y -> (x, y)) rng) rng
                 |> Set.fromList
 
-        invalid =
+        (good, bad) =
             Set.union victimState.hits victimState.misses
                 |> (Set.diff allPoints)
                 |> Set.toList
+                |> List.partition (nextToAHit (Debug.log "Hits" victimState.hits))
+
+        available =
+            (case List.isEmpty (Debug.log "Good" good) of
+                False -> good
+                True -> bad)
                 |> Array.fromList
 
         size =
-            Array.length invalid
+            Array.length available
     in
-        Time.now
+         Time.now
             |> Task.map
                 (\t ->
                     let
@@ -40,11 +63,10 @@ randomCoordinate handler victimState =
                                 |> Random.step (Random.int 0 (size - 1))
                                 |> Tuple.first
                     in
-                        Array.get index invalid
+                        Array.get index available
                             |> Maybe.withDefault (0,0)
                 )
             |> Task.perform handler
-
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -78,7 +100,7 @@ update msg model =
                         0 ->
                             case model.gameState of
                                 Playing Opponent ->
-                                    randomCoordinate (Attack Opponent) model.myState
+                                    optimalCoordinate (Attack Opponent) model.myState
                                 _ -> Cmd.none
                         _ -> Cmd.none
             in
@@ -110,7 +132,7 @@ update msg model =
 
 
             in
-                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 2}
+                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 1}
                 , case Set.size updatedVictim.hits of
                     17 -> Task.perform GameOver (Task.succeed attacker.commander)
                     _ -> Cmd.none

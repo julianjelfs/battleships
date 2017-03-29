@@ -37,29 +37,28 @@ gridCol gameState playerState ships y x =
         miss = Set.member (x, y) playerState.misses
 
         s =
-            case cellCoveredByShip ( x, y ) ships of
-                Nothing ->
-                    [ ]
+            case playerState.commander of
+                Opponent -> []
+                Me ->
+                    case cellCoveredByShip ( x, y ) ships of
+                        Nothing ->
+                            [ ]
 
-                Just c ->
-                    let
-                        rgba =
-                            Color.toRgb c
+                        Just c ->
+                            let
+                                rgba =
+                                    Color.toRgb c
 
-                        str =
-                            "rgba("
-                                ++ (toString rgba.red)
-                                ++ ","
-                                ++ (toString rgba.green)
-                                ++ ","
-                                ++ (toString rgba.blue)
-                                ++ ","
-                                ++ (toString (case playerState.commander of
-                                    Opponent -> 0.05
-                                    Me -> 1))
-                                ++ ")"
-                    in
-                        [ ( "backgroundColor", str ) ]
+                                str =
+                                    "rgba("
+                                        ++ (toString rgba.red)
+                                        ++ ","
+                                        ++ (toString rgba.green)
+                                        ++ ","
+                                        ++ (toString rgba.blue)
+                                        ++ ",1)"
+                            in
+                                [ ( "backgroundColor", str ) ]
         attrs =
             [ style s
             , classList [("hit", hit), ("miss", miss)]
