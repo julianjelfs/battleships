@@ -21,6 +21,11 @@ view model =
                 ]
                 [ text "One Player" ]
             , button
+                [ onClick (NavigateTo "train")
+                , class "train-player"
+                ]
+                [ text "Train Opponent" ]
+            , button
                 [ onClick (NavigateTo "game")
                 , title "This might come later"
                 , class "two-player"

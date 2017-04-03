@@ -40,6 +40,7 @@ type Route
     = StartRoute
     | SetUpRoute
     | GameRoute
+    | TrainRoute
 
 type alias PlayerState =
     { ships : List Ship

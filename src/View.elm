@@ -10,6 +10,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Start
 import SetUp
+import Train
 
 
 
@@ -31,6 +32,9 @@ pageView model =
 
         Just GameRoute ->
             Game.view model
+
+        Just TrainRoute ->
+            Train.view model
 
         _ ->
             div [] [ h2 [ class "title" ] [ text "Not found" ] ]

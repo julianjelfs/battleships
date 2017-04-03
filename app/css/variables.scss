@@ -1,6 +1,8 @@
 $primary : deepskyblue;
 $secondary : lightgreen;
 $border: #ddd;
+$hit: #ff0000;
+$miss: #00ff00;
 
 @mixin big-button {
   margin-top:10px;

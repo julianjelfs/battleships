@@ -33,5 +33,6 @@ routes =
         , Url.map StartRoute (Url.s "home")
         , Url.map SetUpRoute (Url.s "setup")
         , Url.map GameRoute (Url.s "game")
+        , Url.map TrainRoute (Url.s "train")
         ]
 
