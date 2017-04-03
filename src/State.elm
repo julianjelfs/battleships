@@ -4,7 +4,7 @@ import Array exposing (Array)
 import Types exposing (..)
 import Navigation
 import Routing exposing (urlChange)
-import Ships exposing (getBothBattlefields)
+import Ships exposing (getBothBattlefields, getRandomShips)
 import Player.State
 import Actions exposing (..)
 import Set
@@ -80,13 +80,31 @@ update msg model =
 
         PlayerMsg sub ->
             ( { model | yourState = Player.State.update sub model.yourState
-            , myState = Player.State.update sub model.myState }, Cmd.none )
+            , myState = Player.State.update sub model.myState
+            , trainingState = Player.State.update sub model.trainingState }
+            , Cmd.none )
 
         Shuffle ->
             ( model, getBothBattlefields )
 
         StartGame ->
             ( { model | gameState = Playing Me }, Navigation.newUrl "game" )
+
+        StartTraining ->
+            ( { model | gameState = Training
+            , trainingState = (PlayerState [] Set.empty Set.empty Trainee)}
+            , Cmd.map PlayerMsg (getRandomShips Trainee 0))
+
+        StopTraining ->
+            ( { model | gameState = NotStarted }
+            , Cmd.none )
+
+        Train t ->
+            let
+                _ = Debug.log "Train!" t
+            in
+                (model
+                , optimalCoordinate (Attack Trainee) model.trainingState)
 
         GameOver winner ->
             ({ model | gameState = Finished winner }, Cmd.none)
@@ -115,6 +133,7 @@ update msg model =
                     case cmdr of
                         Me -> (model.yourState, model.myState)
                         Opponent -> (model.myState, model.yourState)
+                        _ -> (model.trainingState, model.trainingState)
 
                 updatedVictim =
                     victim.ships
@@ -129,10 +148,14 @@ update msg model =
                     case cmdr of
                         Me -> {model | yourState = updatedVictim}
                         Opponent -> {model | myState = updatedVictim}
+                        _ -> {model | trainingState = updatedVictim }
 
-
+                gameState =
+                    case model.gameState of
+                        Training -> Training
+                        _ -> Playing <| otherPlayer cmdr
             in
-                ( { updatedModel | gameState = Playing <| otherPlayer cmdr, thinking = 1}
+                ( { updatedModel | gameState = gameState, thinking = 1}
                 , case Set.size updatedVictim.hits of
                     17 -> Task.perform GameOver (Task.succeed attacker.commander)
                     _ -> Cmd.none
@@ -143,3 +166,4 @@ otherPlayer cmdr =
     case cmdr of
         Me -> Opponent
         Opponent -> Me
+        Trainee -> Trainee

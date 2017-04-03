@@ -39,7 +39,7 @@ gridCol gameState playerState ships y x =
         s =
             case playerState.commander of
                 Opponent -> []
-                Me ->
+                _ ->
                     case cellCoveredByShip ( x, y ) ships of
                         Nothing ->
                             [ ]
@@ -72,7 +72,7 @@ gridCol gameState playerState ships y x =
                             List.append attrs
                             [ onClick (Attack Me (x, y))]
                         _ -> attrs
-                Me ->
+                _ ->
                     attrs)
             []
 

@@ -30,11 +30,14 @@ type GameMode
 type Commander
     = Me
     | Opponent
+    | Trainee
 
 type GameState =
     NotStarted
     | Playing Commander
     | Finished Commander
+    | Training
+
 
 type Route
     = StartRoute
@@ -54,6 +57,7 @@ type alias Model =
     , mode : GameMode
     , myState : PlayerState
     , yourState : PlayerState
+    , trainingState : PlayerState
     , gameState : GameState
     , thinking : Int
     }
@@ -66,5 +70,6 @@ initialModel =
         Alternate
         (PlayerState [] Set.empty Set.empty Me)
         (PlayerState [] Set.empty Set.empty Opponent)
+        (PlayerState [] Set.empty Set.empty Trainee)
         NotStarted
         5

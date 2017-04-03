@@ -1,4 +1,4 @@
-module Ships exposing (getBothBattlefields, coordsAndColor)
+module Ships exposing (getBothBattlefields, coordsAndColor, getRandomShips)
 
 import Color
 import Time

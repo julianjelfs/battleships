@@ -14,3 +14,6 @@ type Msg
     | GameOver Commander
     | StartGame
     | Think Time
+    | Train Time
+    | StartTraining
+    | StopTraining

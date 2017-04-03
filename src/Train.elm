@@ -19,8 +19,13 @@ view model =
                 []
                 [ button
                     [ class "turn"
+                    , onClick (case model.gameState of
+                                Training -> StopTraining
+                                _ -> StartTraining)
                     ]
-                    [ text "Start Training" ]
+                    [ text (case model.gameState of
+                                Training -> "Stop Training"
+                                _ -> "Start Training") ]
                 ]
             ]
         , div
@@ -28,6 +33,6 @@ view model =
             [ div
                 [ class "training"
                 ]
-                [ Battlefield.view model.gameState model.yourState ]
+                [ Battlefield.view model.gameState model.trainingState ]
             ]
         ]
