@@ -2,7 +2,7 @@
 import '../css/App.scss'
 import '../img/bomb.png'
 import '../img/flag.png'
-import reinforce from '../js/reinforce.js'
+import reinforce from 'reinforcenode'
 
 //import io from 'socket.io-client'
 import Elm from '../../src/Main.elm'
@@ -22,4 +22,5 @@ const spec = {
     alpha: 0.01
 };
 
-//const agent = new reinforce.RL.DQNAgent(env, spec);
+
+const agent = new reinforce.DQNAgent(env, spec);
