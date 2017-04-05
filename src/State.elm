@@ -12,6 +12,7 @@ import Task
 import Time
 import Random exposing (Generator)
 import Dict
+import Ports exposing (requestMove)
 
 surroundingCells (x, y) =
     [ (x, y-1)
@@ -100,11 +101,9 @@ update msg model =
             , Cmd.none )
 
         Train t ->
-            let
-                _ = Debug.log "Train!" t
-            in
-                (model
-                , optimalCoordinate (Attack Trainee) model.trainingState)
+            (model
+            , requestMove (toTrainingState model.trainingState))
+            --, optimalCoordinate (Attack Trainee) model.trainingState)
 
         GameOver winner ->
             ({ model | gameState = Finished winner }, Cmd.none)

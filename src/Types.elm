@@ -62,6 +62,13 @@ type alias Model =
     , thinking : Int
     }
 
+type alias TrainingState =
+    { hits: List (Int, Int)
+    , misses : List (Int, Int)
+    }
+
+toTrainingState state =
+    TrainingState (Set.toList state.hits) (Set.toList state.misses)
 
 initialModel : Model
 initialModel =
