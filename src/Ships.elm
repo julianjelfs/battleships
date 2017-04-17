@@ -1,4 +1,4 @@
-module Ships exposing (getBothBattlefields, coordsAndColor, getRandomShips)
+module Ships exposing (getBothBattlefields, coordsAndColor, getRandomShips, getRandomShipsTask)
 
 import Color
 import Time
@@ -126,7 +126,7 @@ getBothBattlefields =
         [ Cmd.map PlayerMsg (getRandomShips Me 0)
         , Cmd.map PlayerMsg (getRandomShips Opponent 1000) ]
 
-getRandomShips cmdr offset =
+getRandomShipsTask offset =
     Time.now
         |> Task.andThen
             (\t ->
@@ -135,6 +135,9 @@ getRandomShips cmdr offset =
                     |> randomShips
                     |> Task.succeed
             )
+
+getRandomShips cmdr offset =
+    getRandomShipsTask offset
         |> Task.map (\s -> (cmdr, s))
         |> Task.perform PositionShips
 

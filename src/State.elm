@@ -4,7 +4,7 @@ import Array exposing (Array)
 import Types exposing (..)
 import Navigation
 import Routing exposing (urlChange)
-import Ships exposing (getBothBattlefields, getRandomShips)
+import Ships exposing (getBothBattlefields, getRandomShips, getRandomShipsTask)
 import Player.State
 import Actions exposing (..)
 import Set
@@ -12,7 +12,7 @@ import Task
 import Time
 import Random exposing (Generator)
 import Dict
-import Ports exposing (requestMove, startTraining)
+import Ports exposing (requestMove, sendInitialState, startTraining)
 
 surroundingCells (x, y) =
     [ (x, y-1)
@@ -79,6 +79,14 @@ update msg model =
         UrlChange location ->
             urlChange location model
 
+        RequestInitialState _ ->
+            ( model
+            , Task.perform ReceiveInitialState (getRandomShipsTask 0))
+
+        ReceiveInitialState ships ->
+            ( model
+            , (sendInitialState (List.concatMap .positions ships)))
+
         PlayerMsg sub ->
             let
                 trainingState = Player.State.update sub model.trainingState
@@ -109,7 +117,7 @@ update msg model =
 
         StartTraining ->
             ( {model | gameState = Training }
-            , requestMove (toTrainingState model.trainingState)
+            , startTraining ()
             )
 
         StopTraining  ->

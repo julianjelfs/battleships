@@ -7,7 +7,7 @@ import Actions exposing (..)
 import View exposing (..)
 import State exposing (update)
 import Time exposing (every, millisecond, second)
-import Ports exposing (receiveMove)
+import Ports exposing (receiveMove, requestInitialState)
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
@@ -18,7 +18,8 @@ init location =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ receiveMove (Attack Trainee)
+        [ requestInitialState RequestInitialState
+        , receiveMove (Attack Trainee)
         , case model.gameState of
             Playing Opponent ->
                 every second Think

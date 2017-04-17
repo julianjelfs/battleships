@@ -21,7 +21,7 @@ view model =
                 ]
                 [ text "One Player" ]
             , button
-                [ onClick (NavigateTo "train")
+                [ onClick StartTraining
                 , class "train-player"
                 ]
                 [ text "Train Opponent" ]

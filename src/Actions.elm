@@ -17,3 +17,5 @@ type Msg
     | StartTraining
     | InitialiseTraining ()
     | StopTraining
+    | RequestInitialState ()
+    | ReceiveInitialState (List Ship)

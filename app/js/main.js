@@ -9,27 +9,54 @@ import Elm from '../../src/Main.elm'
 
 const app = Elm.Main.fullscreen();
 
-/*
-Integrating this stuff with elm UI was a mistake and a waste of time.
-Let's just store the agent in localStorage and use when we choose to training it
-we'll just run 1000 games with no UI and then save to localStorage. Then when
-playing 1 player we will just play against the agent.
- */
+let iteration = 0;
+
+app.ports.sendInitialState.subscribe(ships => {
+    iteration += 1;
+
+    console.log(`Playing game with ships: ${ships}`);
+
+    let state = {
+        ships : ships,
+        hits : [],
+        misses : []
+    };
+    let hitlog = [];
+
+    do {
+        const s = mapState(state);
+        const allVisited = state.hits.concat(state.misses);
+
+        let visited = true,
+            attack = null,
+            action = null;
+
+        do {
+            action = agent.act(s);
+            attack = indexToCoord(action);
+            visited = contains(allVisited, attack);
+        } while (visited);
+
+        if(contains(state.ships, attack)) {
+            state.hits.push(attack);
+            hitlog.push(1);
+        } else {
+            state.misses.push(attack);
+            hitlog.push(0);
+        }
+        agent.learn(calculateReward(hitlog, 0.5));
+    } while (state.hits.length < 17);
+
+    console.log(`Game ${iteration} completed with ${state.misses.length} misses`);
+
+    if(iteration < 100) {
+        app.ports.requestInitialState.send(null);
+    }
+});
 
 function train() {
-    //make sure we have the agent (load from LocalStorage if necessary
-
-    for(let i=0; i<1000; i++) {
-        //generate a random position (via elm ports so we don't have to rewrite all that)
-        //state { hits: [], misses : [], ships : [] }
-
-        //while (hiddenShips) {
-            //get action
-            //update state (carry out action)
-            //calculate reward
-            //learn
-        //
-    }
+    iteration = 0;
+    app.ports.requestInitialState.send(null);
 }
 
 function randomMove() {
@@ -38,8 +65,29 @@ function randomMove() {
     return [x,y];
 }
 
-function calculateReward(action) {
-    return Math.random() * 100;
+function sum(arr) {
+    return arr.reduce((acc, v) => acc + v, 0);
+}
+
+// This is our reward function
+//  r(a;t0) = ∑t≥t0(h(t)–h(t))(0.5)t−t
+// looks at action a taken at time t0 and returns a
+// weighted sum of hit values h(t) for this and all
+// future steps of the game
+function calculateReward(hitlog, gamma) {
+    const weighted = hitlog.map((item, i) => {
+        const sumPreviousHits = sum(hitlog.slice(0, i));
+        const remainingHits = 17 - sumPreviousHits;
+        const total = 100 - gamma * i;
+        return item - remainingHits / total;
+    });
+
+    const reward = weighted.map((item, i) => {
+       const sumRemainingWeighted = sum(weighted.slice(i));
+       return gamma * i * sumRemainingWeighted;
+    });
+
+    return reward[reward.length-1];
 }
 
 function indexToCoord(index) {
@@ -72,45 +120,13 @@ function mapState(state) {
     return coords;
 }
 
-function trainedMove(state) {
-    currentState = mapState(state);
-    const allVisited = state.hits.concat(state.misses);
-
-    let visited = true,
-        attack = null,
-        action = null;
-
-    do {
-        action = agent.act(currentState);
-        attack = indexToCoord(action);
-        visited = contains(allVisited, attack);
-    } while (visited);
-
-
-    if(contains(state.ships, attack)) {
-        agent.learn(100);
-    } else {
-        agent.learn(10);
-    }
-    return attack;
-}
-
 let currentState = mapState({hits:[], misses:[]});
 
 app.ports.startTraining.subscribe(() => {
     console.log('starting training game');
+    train();
 });
 
-app.ports.requestMove.subscribe(state => {
-    console.log(state);
-    app.ports.receiveMove.send(trainedMove(state));
-});
-
-// This is our reward function
-//  r(a;t0) = ∑t≥t0(h(t)–h(t))(0.5)t−t
-// looks at action a taken at time t0 and returns a
-// weighted sum of hit values h(t) for this and all
-// future steps of the game
 
 const env = {
     getNumStates: function() {
