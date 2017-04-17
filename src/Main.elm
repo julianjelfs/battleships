@@ -22,8 +22,6 @@ subscriptions model =
         , case model.gameState of
             Playing Opponent ->
                 every second Think
-            Training ->
-                every (millisecond * 10) Train
             _ -> Sub.none
         ]
 

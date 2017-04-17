@@ -12,7 +12,7 @@ import Task
 import Time
 import Random exposing (Generator)
 import Dict
-import Ports exposing (requestMove)
+import Ports exposing (requestMove, startTraining)
 
 surroundingCells (x, y) =
     [ (x, y-1)
@@ -80,10 +80,20 @@ update msg model =
             urlChange location model
 
         PlayerMsg sub ->
-            ( { model | yourState = Player.State.update sub model.yourState
-            , myState = Player.State.update sub model.myState
-            , trainingState = Player.State.update sub model.trainingState }
-            , Cmd.none )
+            let
+                trainingState = Player.State.update sub model.trainingState
+            in
+                ( { model | yourState = Player.State.update sub model.yourState
+                , myState = Player.State.update sub model.myState
+                , trainingState = trainingState }
+                , case model.gameState of
+                    InitialisingTraining ->
+                        Cmd.batch
+                            [ Task.perform (\_ -> StartTraining) (Task.succeed ())
+                            , startTraining ()
+                            ]
+                    _ -> Cmd.none
+                )
 
         Shuffle ->
             ( model, getBothBattlefields )
@@ -91,19 +101,21 @@ update msg model =
         StartGame ->
             ( { model | gameState = Playing Me }, Navigation.newUrl "game" )
 
-        StartTraining ->
-            ( { model | gameState = Training
+        InitialiseTraining () ->
+            ( { model | gameState = InitialisingTraining
             , trainingState = (PlayerState [] Set.empty Set.empty Trainee)}
-            , Cmd.map PlayerMsg (getRandomShips Trainee 0))
+            , Cmd.map PlayerMsg (getRandomShips Trainee 0)
+            )
 
-        StopTraining ->
+        StartTraining ->
+            ( {model | gameState = Training }
+            , requestMove (toTrainingState model.trainingState)
+            )
+
+        StopTraining  ->
             ( { model | gameState = NotStarted }
-            , Cmd.none )
-
-        Train t ->
-            (model
-            , requestMove (toTrainingState model.trainingState))
-            --, optimalCoordinate (Attack Trainee) model.trainingState)
+            , Cmd.none
+            )
 
         GameOver winner ->
             ({ model | gameState = Finished winner }, Cmd.none)
@@ -156,8 +168,17 @@ update msg model =
             in
                 ( { updatedModel | gameState = gameState, thinking = 1}
                 , case Set.size updatedVictim.hits of
-                    17 -> Task.perform GameOver (Task.succeed attacker.commander)
-                    _ -> Cmd.none
+                    17 ->
+                        case model.gameState of
+                            Training ->
+                                Task.perform InitialiseTraining (Task.succeed ())
+                            _ ->
+                                Task.perform GameOver (Task.succeed attacker.commander)
+                    _ ->
+                        case model.gameState of
+                            Training ->
+                                requestMove (toTrainingState updatedModel.trainingState)
+                            _ -> Cmd.none
                 )
 
 

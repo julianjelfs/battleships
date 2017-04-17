@@ -21,7 +21,7 @@ view model =
                     [ class "turn"
                     , onClick (case model.gameState of
                                 Training -> StopTraining
-                                _ -> StartTraining)
+                                _ -> InitialiseTraining ())
                     ]
                     [ text (case model.gameState of
                                 Training -> "Stop Training"

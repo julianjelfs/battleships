@@ -36,6 +36,7 @@ type GameState =
     NotStarted
     | Playing Commander
     | Finished Commander
+    | InitialisingTraining
     | Training
 
 
@@ -65,10 +66,11 @@ type alias Model =
 type alias TrainingState =
     { hits: List (Int, Int)
     , misses : List (Int, Int)
+    , ships : List (Int, Int)
     }
 
 toTrainingState state =
-    TrainingState (Set.toList state.hits) (Set.toList state.misses)
+    TrainingState (Set.toList state.hits) (Set.toList state.misses) (List.concatMap .positions state.ships)
 
 initialModel : Model
 initialModel =
