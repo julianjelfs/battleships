@@ -49,6 +49,9 @@ app.ports.sendInitialState.subscribe(ships => {
 
     console.log(`Game ${iteration} completed with ${state.misses.length} misses`);
 
+    //store the training so far
+    localStorage.setItem("AgentState", JSON.stringify(agent.toJSON()));
+
     if(iteration < 100) {
         app.ports.requestInitialState.send(null);
     }
@@ -78,13 +81,13 @@ function calculateReward(hitlog, gamma) {
     const weighted = hitlog.map((item, i) => {
         const sumPreviousHits = sum(hitlog.slice(0, i));
         const remainingHits = 17 - sumPreviousHits;
-        const total = 100 - gamma * i;
+        const total = 100 - (Math.pow (gamma, i));
         return item - remainingHits / total;
     });
 
     const reward = weighted.map((item, i) => {
        const sumRemainingWeighted = sum(weighted.slice(i));
-       return gamma * i * sumRemainingWeighted;
+       return Math.pow(gamma, -i) * sumRemainingWeighted;
     });
 
     return reward[reward.length-1];
@@ -114,7 +117,7 @@ function mapState(state) {
             const c = [x,y];
             const hit = contains(state.hits, c);
             const miss = contains(state.misses, c);
-            coords.push(hit ? 1 : miss ? -1 : 0);
+            coords.push(hit ? 1 : miss ? 0 : -1);
         }
     }
     return coords;
@@ -143,5 +146,10 @@ const spec = {
 
 
 const agent = new reinforce.DQNAgent(env, spec);
+
+const state = localStorage.getItem("AgentState")
+if(state) {
+    agent.fromJSON(JSON.parse(state));
+}
 
 /* to save agent use agent.toJSON() and agent.fromJSON() and localStorage */
